@@ -1,0 +1,83 @@
+<html>
+<head>
+    <title>成绩计算器</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        body {
+            margin: 30px;
+        }
+        textarea {
+            width: 100%;
+            height: 90%;
+            min-height: 400px;
+        }
+        button {
+            height: 40px;
+            width: 120px;
+            margin-top: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 20%;
+            margin: 10px 0;
+        }
+        .right {
+            float: right;
+            width: 50%;
+        }
+        .left {
+            float: left;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="right">
+        <textarea></textarea>
+    </div>
+    <div class="left">
+        <label>平均分：</label>
+        <label id="average"></label>   
+    </div>
+    <div class="left">
+        <label>总分：</label>
+        <label id="sum"></label>   
+    </div>
+    <div class="left">
+        <label>人数：</label>
+        <label id="count"></label>   
+    </div>
+    <div class="left">
+        <button id="calculate">计算</button>
+    </div>
+<script type="text/javascript">
+    var dataSelector = document.querySelector('textarea');
+    var buttonSelector = document.querySelector('#calculate');
+    var averageSelector = document.querySelector('#average');
+    var sumSelector = document.querySelector('#sum');
+    var countSelector = document.querySelector('#count');
+
+    buttonSelector.onclick = function () {
+        var dataArr = dataSelector.value.split(/\s{1,}/);
+        var sum = 0;
+        var nullCount = 0;
+        dataArr.some(function (data, index) {
+            data -= 0;
+            if (data > 0) {
+                sum += data;
+            } else {
+                nullCount++;
+            }
+        });
+        var count = dataArr.length - nullCount;
+        setValue(sumSelector, sum);
+        setValue(countSelector, count);
+        setValue(averageSelector, sum/count);
+    };
+
+    function setValue (selector, value) {
+        selector.innerHTML = value || 0;
+    }
+</script>
+</body>
+</html>
