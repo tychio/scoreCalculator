@@ -1,0 +1,4 @@
+scoreCalculator
+===============
+
+calculate average score.
