@@ -65,34 +65,50 @@
     </fieldset>
     <fieldset class="left devide">
         <div>
-            <label>成绩：</label>
+            <label>GPA：</label>
+            <label id="gpa"></label>   
+        </div>
+        <div>
+            <label>平均分</label>
+            <label id="percent"></label>   
+        </div>
+        <div>
+            <label>总成绩：</label>
             <label id="grade"></label>   
         </div>
         <div>
-            <button id="calculate_credit">计算</button>
+            <label>总学分：</label>
+            <label id="credit"></label>   
+        </div>
+        <div>
+            <button id="calculate_gpa">计算</button>
         </div>
     </fieldset>
 <script type="text/javascript">
     (function () {
         var dataSelector = document.querySelector('textarea');
-        var buttonSelector = document.querySelector('#calculate_credit');
+        var buttonSelector = document.querySelector('#calculate_gpa');
         var gradeSelector = document.querySelector('#grade');
+        var creditSelector = document.querySelector('#credit');
+        var gpaSelector = document.querySelector('#gpa');
+        var percentSelector = document.querySelector('#percent');
 
         buttonSelector.onclick = function () {
             var dataArr = dataSelector.value.split(/\n{1,}/);
             var grade = 0;
-            var count = 0;
+            var credit = 0;
             dataArr.some(function (data, index) {
-                var _g = data.split(/\s{1,}/).reduce(function (prev, cur) {
-                    return cur - 0 > 0 ? prev * cur : cur == 'Pass' ? 100 : 1;
-                });
-                console.log(_g);
+                var _g = data.split(/\s{1,}/);
+                credit += _g[0] - 0;
+                _g = _g[1] - 0 > 0 ? _g[0] * _g[1] : _g[1] == 'Pass' ? 85 : 1;
                 if (_g - 0 > 1) {
                     grade += _g;
-                    count++;
                 }
             });
-            setValue(gradeSelector, grade/count);
+            setValue(creditSelector, credit);
+            setValue(gradeSelector, grade);
+            setValue(percentSelector, (grade)/(credit));
+            setValue(gpaSelector, (grade*4)/(credit*100));
         };
     })();
     (function () {
@@ -103,7 +119,7 @@
         var countSelector = document.querySelector('#count');
 
         buttonSelector.onclick = function () {
-            var dataArr = dataSelector.value.split(/\s{1,}/);
+            var dataArr = dataSelector.value.split(/\s\t{1,}/);
             var sum = 0;
             var nullCount = 0;
             dataArr.some(function (data, index) {
