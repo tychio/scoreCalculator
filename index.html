@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <style type="text/css">
         body {
+            overflow: hidden;
             margin: 30px;
+        }
+        fieldset {
+            padding: 0;
+            margin: 0;
+            border: none;
         }
         textarea {
             width: 100%;
@@ -29,52 +35,91 @@
             float: left;
             width: 50%;
         }
+        .devide {
+            border-top: 1px solid black;
+            margin-top: 50px;
+            padding-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="right">
         <textarea></textarea>
     </div>
-    <div class="left">
-        <label>平均分：</label>
-        <label id="average"></label>   
-    </div>
-    <div class="left">
-        <label>总分：</label>
-        <label id="sum"></label>   
-    </div>
-    <div class="left">
-        <label>人数：</label>
-        <label id="count"></label>   
-    </div>
-    <div class="left">
-        <button id="calculate">计算</button>
-    </div>
+    <fieldset class="left">
+        <div>
+            <label>平均分：</label>
+            <label id="average"></label>   
+        </div>
+        <div>
+            <label>总分：</label>
+            <label id="sum"></label>   
+        </div>
+        <div>
+            <label>人数：</label>
+            <label id="count"></label>   
+        </div>
+        <div>
+            <button id="calculate_score">计算</button>
+        </div>
+    </fieldset>
+    <fieldset class="left devide">
+        <div>
+            <label>成绩：</label>
+            <label id="grade"></label>   
+        </div>
+        <div>
+            <button id="calculate_credit">计算</button>
+        </div>
+    </fieldset>
 <script type="text/javascript">
-    var dataSelector = document.querySelector('textarea');
-    var buttonSelector = document.querySelector('#calculate');
-    var averageSelector = document.querySelector('#average');
-    var sumSelector = document.querySelector('#sum');
-    var countSelector = document.querySelector('#count');
+    (function () {
+        var dataSelector = document.querySelector('textarea');
+        var buttonSelector = document.querySelector('#calculate_credit');
+        var gradeSelector = document.querySelector('#grade');
 
-    buttonSelector.onclick = function () {
-        var dataArr = dataSelector.value.split(/\s{1,}/);
-        var sum = 0;
-        var nullCount = 0;
-        dataArr.some(function (data, index) {
-            data -= 0;
-            if (data > 0) {
-                sum += data;
-            } else {
-                nullCount++;
-            }
-        });
-        var count = dataArr.length - nullCount;
-        setValue(sumSelector, sum);
-        setValue(countSelector, count);
-        setValue(averageSelector, sum/count);
-    };
+        buttonSelector.onclick = function () {
+            var dataArr = dataSelector.value.split(/\n{1,}/);
+            var grade = 0;
+            var count = 0;
+            dataArr.some(function (data, index) {
+                var _g = data.split(/\s{1,}/).reduce(function (prev, cur) {
+                    return cur - 0 > 0 ? prev * cur : cur == 'Pass' ? 100 : 1;
+                });
+                console.log(_g);
+                if (_g - 0 > 1) {
+                    grade += _g;
+                    count++;
+                }
+            });
+            setValue(gradeSelector, grade/count);
+        };
+    })();
+    (function () {
+        var dataSelector = document.querySelector('textarea');
+        var buttonSelector = document.querySelector('#calculate_score');
+        var averageSelector = document.querySelector('#average');
+        var sumSelector = document.querySelector('#sum');
+        var countSelector = document.querySelector('#count');
 
+        buttonSelector.onclick = function () {
+            var dataArr = dataSelector.value.split(/\s{1,}/);
+            var sum = 0;
+            var nullCount = 0;
+            dataArr.some(function (data, index) {
+                data -= 0;
+                if (data > 0) {
+                    sum += data;
+                } else {
+                    nullCount++;
+                }
+            });
+            var count = dataArr.length - nullCount;
+            setValue(sumSelector, sum);
+            setValue(countSelector, count);
+            setValue(averageSelector, sum/count);
+        };
+    })();
     function setValue (selector, value) {
         selector.innerHTML = value || 0;
     }
